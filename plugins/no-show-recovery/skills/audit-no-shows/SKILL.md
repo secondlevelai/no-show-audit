@@ -15,7 +15,7 @@ Before the first HighLevel call, read `references/ghl.md`. It has the exact oper
 
 - **You never do arithmetic or count people.** Every number shown to the user comes from `audit.py` output or `audit.json`. If you need a number that isn't there, say so instead of working it out.
 - **You never read raw HighLevel data.** Big results are saved to a file by Claude Code ("Output has been saved to …"). Pass that path to the script, and don't open it.
-- **Appointments or contacts that come back inline** (small accounts): save them with the Write tool, exactly as returned, to `nsr-runs/<run>/raw/<name>.json`, then pass that path. Don't edit, summarize or filter them.
+- **Appointments or contacts that come back inline** (small accounts): save them with the Write tool, exactly as returned, to `RUN/raw/<name>.json`, then pass that path. Don't edit, summarize or filter them.
 - **The three small lookups** (step 2.4) usually come back inline. Save only what the script needs, in this exact shape (see step 2.4).
 - **Save files only with the Write tool**, never with shell tricks (`cat > file <<EOF`, `echo … >`). Claude Code's safety check blocks those and the user gets an extra prompt.
 - **Write every path out in full in shell commands.** Don't use shell variables (`$T`, `$RUN`): Claude Code's safety check blocks commands it can't read.
@@ -23,12 +23,13 @@ Before the first HighLevel call, read `references/ghl.md`. It has the exact oper
 
 ## 1. Config and client
 
-1. Read `no-show-recovery.json` in the working folder. **Missing** → say "Let's connect GoHighLevel first, it takes about a minute," and follow the **setup** skill, then come back here.
+1. Run `python3 ${CLAUDE_SKILL_DIR}/scripts/audit.py paths`. Settings live in its `config` file (the same file from any chat, in any folder). `config_exists` is false → say "Let's connect GoHighLevel first, it takes about a minute," and follow the **setup** skill, then come back here.
 2. Pick the client:
    - The user named one ("audit Sarah's no-shows") → match it against `clients[*].name`, loosely. No match → run setup Steps 2–4 for it, then continue.
    - Otherwise, one client → use it. Several → ask with AskUserQuestion, header "Client", default first.
 3. Check the HighLevel tools respond (`list_locations`). If they don't, follow the setup skill's Step 1 to reconnect.
-4. Make the run folder: `nsr-runs/<client-slug>-<YYYY-MM-DD>/raw/`. Keep its path as `RUN`.
+   Otherwise read that config file.
+4. Make today's report folder: `python3 ${CLAUDE_SKILL_DIR}/scripts/audit.py newrun --client <locationId>`. It prints the folder path (in `~/Documents/no-show-recovery/`). Keep it as `RUN`, written out in full.
 
 Say one line: "Auditing **{client}**: last 90 days of {calendar names}. Read-only, nothing gets sent."
 
@@ -54,7 +55,7 @@ Progress line after pulling, from the `ids` output: "Pulled appointments for {N}
 ## 3. Run the audit
 
 ```bash
-python3 ${CLAUDE_SKILL_DIR}/scripts/audit.py run --config no-show-recovery.json --client <locationId> --out RUN <every file from step 2>
+python3 ${CLAUDE_SKILL_DIR}/scripts/audit.py run --client <locationId> --out RUN <every file from step 2>
 ```
 
 It prints a short summary and writes `RUN/audit.json`.
@@ -63,7 +64,7 @@ It prints a short summary and writes `RUN/audit.json`.
 - header "Price": "What's the offer's price?" Options: **$2,000**, **$3,000**, **$5,000**, **$10,000** (they type others in "Other").
 - header "Close rate": "Roughly what share of people who show up end up buying?" Options: **15%**, **20%**, **30%**, **Not sure (use 20%)**.
 
-Save each answer with `python3 ${CLAUDE_SKILL_DIR}/scripts/audit.py save --config no-show-recovery.json --client <locationId> price 3000` (or `close_rate 20`), then re-run step 3. The report will say these numbers were given, not derived.
+Save each answer with `python3 ${CLAUDE_SKILL_DIR}/scripts/audit.py save --client <locationId> price 3000` (or `close_rate 20`), then re-run step 3. The report will say these numbers were given, not derived.
 
 **Setters (first audit for a client only):** the summary prints a `Setters:` line. If it ends with `[auto-picked: confirm with the user]`, the client has no `setter_source` saved yet. Read `setter.candidates` from `RUN/audit.json` and ask once with AskUserQuestion, header "Setters":
 
@@ -73,7 +74,7 @@ Options:
 - Every candidate with coverage of 20% or more, best first, labelled with its `label` and coverage. Example: **Contact owner (who the contact is assigned to)**, description "filled in on 100% of booked calls". Add "(Recommended)" to the one the script picked.
 - **We don't use setters**, description "Leads book themselves. Skip the setter breakdown."
 
-Save the answer with `python3 ${CLAUDE_SKILL_DIR}/scripts/audit.py save --config no-show-recovery.json --client <locationId> setter_source <source>`, using the candidate's `source` value or `none`. If it differs from what was auto-picked, re-run step 3 so the report uses it. If no candidate has 20% coverage, don't ask: save `none` the same way and say in one line, "I couldn't find setters recorded on these calls, so the report skips the setter breakdown."
+Save the answer with `python3 ${CLAUDE_SKILL_DIR}/scripts/audit.py save --client <locationId> setter_source <source>`, using the candidate's `source` value or `none`. If it differs from what was auto-picked, re-run step 3 so the report uses it. If no candidate has 20% coverage, don't ask: save `none` the same way and say in one line, "I couldn't find setters recorded on these calls, so the report skips the setter breakdown."
 
 ## 4. Build and open the report
 
@@ -97,7 +98,7 @@ If `money` is null, lead with the people count instead.
 
 ## Follow-ups
 
-- **Never edit `no-show-recovery.json` by hand or with inline code.** Use `audit.py save`. It's one plain command the user can approve once.
+- **Never edit the config file by hand or with inline code.** Use `audit.py save`. It's one plain command the user can approve once.
 - "Change the recovery rate to 15%" → re-run step 3 with `--recovery-rate 0.15` and rebuild the report.
 - "Use $5k as the price" / "our close rate is 25%" → `audit.py save … price 5000` / `close_rate 25`, re-run step 3 and rebuild.
 - "Show me Jake's no-shows" → answer from `audit.json` `recoverable` filtered by setter, as a short list (name, missed date, source). The report has the same filter.

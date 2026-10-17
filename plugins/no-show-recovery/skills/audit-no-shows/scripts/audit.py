@@ -7,7 +7,9 @@ does the money math and builds the breakdowns. Standard library only.
 
 Usage:
   audit.py ids FILE...                      contact-ID batches (<=100) to fetch, as JSON lines
-  audit.py run --config CFG --client ID --out DIR FILE...
+  audit.py paths                            where settings and reports live
+  audit.py newrun [--client ID]             make today's report folder, print its path
+  audit.py run [--config CFG] --client ID --out DIR FILE...
                 [--recovery-rate 0.10] [--price N] [--close-rate R] [--days 90]
                 [--booked-at-override MANIFEST]   (dev/test data only)
   audit.py selftest
@@ -33,6 +35,9 @@ try:
 except ImportError:  # pragma: no cover
     ZoneInfo = None
 
+HOME_DIR = Path.home() / ".no-show-recovery"
+DEFAULT_CONFIG = HOME_DIR / "config.json"
+REPORTS_DIR = Path.home() / "Documents" / "no-show-recovery"
 HELD = {"showed", "completed"}
 NOSHOW = {"noshow"}
 UPCOMING_OK = {"confirmed", "new", "active", "showed", "completed"}  # counts as "rebooked"
@@ -424,6 +429,23 @@ def cmd_ids(files: list[str]) -> None:
     print(f"# {len(ids)} contacts in {(len(ids) + 99) // 100} batch(es)", file=sys.stderr)
 
 
+def cmd_paths() -> None:
+    """Where settings and reports live: the same for every chat, in any folder."""
+    HOME_DIR.mkdir(parents=True, exist_ok=True)
+    print(json.dumps({"config": str(DEFAULT_CONFIG), "config_exists": DEFAULT_CONFIG.exists(),
+                      "reports": str(REPORTS_DIR)}, indent=1))
+
+
+def cmd_newrun(a) -> None:
+    cfg_all = json.loads(Path(a.config).read_text())
+    cid = a.client or cfg_all.get("default_client")
+    name = cfg_all["clients"][cid].get("name") or cid
+    slug = "".join(ch if ch.isalnum() else "-" for ch in name.lower()).strip("-")[:40] or "client"
+    run = REPORTS_DIR / f"{slug}-{datetime.now().strftime('%Y-%m-%d')}"
+    (run / "raw").mkdir(parents=True, exist_ok=True)
+    print(run)
+
+
 SAVABLE = {"setter_source": str, "price": float, "close_rate": float}
 
 
@@ -535,13 +557,15 @@ def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
     p = sub.add_parser("ids"); p.add_argument("files", nargs="+")
-    p = sub.add_parser("save"); p.add_argument("--config", required=True); p.add_argument("--client")
+    p = sub.add_parser("save"); p.add_argument("--config", default=str(DEFAULT_CONFIG)); p.add_argument("--client")
     p.add_argument("key"); p.add_argument("value")
     sub.add_parser("window")
-    p = sub.add_parser("setters"); p.add_argument("--config", required=True); p.add_argument("--client")
+    sub.add_parser("paths")
+    p = sub.add_parser("newrun"); p.add_argument("--config", default=str(DEFAULT_CONFIG)); p.add_argument("--client")
+    p = sub.add_parser("setters"); p.add_argument("--config", default=str(DEFAULT_CONFIG)); p.add_argument("--client")
     p.add_argument("files", nargs="+")
     p = sub.add_parser("run")
-    p.add_argument("--config", required=True); p.add_argument("--client")
+    p.add_argument("--config", default=str(DEFAULT_CONFIG)); p.add_argument("--client")
     p.add_argument("--out", required=True); p.add_argument("--days", type=int, default=90)
     p.add_argument("--recovery-rate", type=float, default=DEFAULT_RECOVERY)
     p.add_argument("--price", type=float); p.add_argument("--close-rate", type=float)
@@ -555,6 +579,10 @@ def main() -> None:
         cmd_save(a)
     elif a.cmd == "window":
         cmd_window()
+    elif a.cmd == "paths":
+        cmd_paths()
+    elif a.cmd == "newrun":
+        cmd_newrun(a)
     elif a.cmd == "setters":
         cmd_setters(a)
     elif a.cmd == "run":

@@ -28,7 +28,7 @@ You are walking a growth operator, agency owner or offer owner through setting u
 
 ## If they pasted the repo link and it's already installed
 
-Don't describe the plugin. Go to Step 0. If `no-show-recovery.json` already exists in the working folder and the HighLevel tools work, skip setup and say: "You're already set up ✅ Say **'audit my no-shows'** to run an audit, or **'add a client'** to set up another sub-account."
+Don't describe the plugin. Go to Step 0. Run `python3 ${CLAUDE_SKILL_DIR}/../audit-no-shows/scripts/audit.py paths`. If `config_exists` is true and the HighLevel tools work, skip setup and say: "You're already set up ✅ Say **'audit my no-shows'** to run an audit, or **'add a client'** to set up another sub-account."
 
 ## STEP 0: Right after install, say what's next
 
@@ -98,8 +98,8 @@ Call `list_locations`.
 
 - Sub-accounts come back → "**GoHighLevel's connected.** That was the hard part." → Step 2.
 - **HighLevel tools aren't available in this chat yet** (the connection is made, but this chat started before it): say exactly this, and nothing more technical:
-  > "**GoHighLevel's connected.** ✅ One last thing: type **/reload-plugins** and press **Enter**, then type **set up No-Show Recovery** and I'll pick up right where we left off."
-  After the reload the tools work, and setup continues from Step 2. Only if they say `/reload-plugins` didn't work: "No problem. Open a new chat in this same folder and type **set up No-Show Recovery**."
+  > "**GoHighLevel's connected.** ✅ One last thing: this chat started before the connection, so it can't see it. **Start a new chat and type 'set up No-Show Recovery'.** I'll pick up right where we left off."
+  Don't suggest `/reload-plugins`: it reloads skills but not the HighLevel connection. The new chat finds the tools working and continues from Step 2.
 - Auth error → "The sign-in didn't stick. Let's do it once more." Run `claude mcp logout plugin:no-show-recovery:highlevel`, then repeat Step 1 Path A from step 2.
 - Zero sub-accounts → "I'm connected but can't see any sub-accounts. When you signed in, did you tick the client accounts? Let's sign in once more and tick them." Repeat Step 1.
 
@@ -130,7 +130,7 @@ Coaching, onboarding and support calendars don't belong in the audit. If they pi
 
 ## STEP 4: Save the setup
 
-**Path A:** write `no-show-recovery.json` in the working folder. If it already exists, add or replace this client and keep the others:
+**Path A:** run `python3 ${CLAUDE_SKILL_DIR}/../audit-no-shows/scripts/audit.py paths` and write the file at its `config` path with the Write tool, using that full path. It's in the user's home folder, so it works from any chat in any folder. If it already exists, read it first, then add or replace this client and keep the others:
 
 ```json
 {

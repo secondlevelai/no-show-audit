@@ -4,7 +4,7 @@
 
 <!-- MODULE METADATA
 module: no-show-recovery
-version: v0.5.2
+version: v0.6.0
 status: RELEASED
 requires: [claude-paid-plan, gohighlevel]
 category: Sales
@@ -112,19 +112,17 @@ claude mcp list 2>&1 | grep "no-show-recovery:highlevel"
 - **Connected** → "**GoHighLevel's connected.** That was the hard part." → Step 3.
 - **Needs authentication** → the page probably expired. "That sign-in timed out. Opening a fresh one…" Run the sign-in command again and repeat the message. Never ask them to run anything.
 
-### Step 3: Load the plugin and run setup
+### Step 3: One next step
 
-This chat started before the plugin was installed, so it has to reload plugins once to see it. End with exactly this, and nothing after it:
+This chat started before the plugin was installed, so it can't use the plugin's connection. (`/reload-plugins` doesn't help: it reloads skills but not the HighLevel connection.) End with exactly this, and nothing after it:
 
 > "**You're all set ✅**
 >
-> **Last step:** type **/reload-plugins** and press **Enter**, then type **"set up No-Show Recovery"**.
+> **Last step:** start a **new chat** and type **"set up No-Show Recovery"**. Any folder works, because your settings are saved in your home folder and reports go to **Documents → no-show-recovery**.
 >
 > I'll ask which client and which calendar your sales calls are on, then run your first audit: a report in your browser showing what your no-shows are worth, where they come from, and who you can still win back."
 
-The **setup** skill takes over. It finds GoHighLevel already connected and goes straight to picking the client and calendars.
-
-**Only if they say `/reload-plugins` didn't work:** "No problem. Open a new chat in this same folder and type **set up No-Show Recovery**."
+The **setup** skill takes over in the new chat. It finds GoHighLevel already connected and goes straight to picking the client and calendars.
 
 ---
 
@@ -140,7 +138,7 @@ You can't install from a chat message. Give the clicks:
 
 ## AFTER SETUP
 
-- **Any time:** "Audit my no-shows." A fresh 90-day report each time, saved in `nsr-runs/`.
+- **Any time:** "Audit my no-shows." A fresh 90-day report each time, saved in **Documents → no-show-recovery**.
 - **Another client:** "Audit {client}'s no-shows" or "add a client". It asks which calendar, then runs.
 - **Change the numbers:** "Use $5k as the price", "our close rate is 25%", "show me Jake's no-shows".
 

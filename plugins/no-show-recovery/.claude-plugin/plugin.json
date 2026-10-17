@@ -1,7 +1,7 @@
 {
   "name": "no-show-recovery",
   "displayName": "No-Show Recovery",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "description": "Find every no-show in GoHighLevel, see what they're worth and why they happen (setter, lead source, booking gap, time of day). Read-only.",
   "author": { "name": "Second Level AI", "url": "https://github.com/secondlevelai" },
   "homepage": "https://github.com/secondlevelai/no-show-recovery",
