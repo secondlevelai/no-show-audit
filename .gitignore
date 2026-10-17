@@ -1,0 +1,10 @@
+# Dev-only: test-account token, Twilio keys, seeded data with a real phone number
+dev/
+.env
+*.env
+# What the plugin writes in a user's folder
+no-show-recovery.json
+nsr-runs/
+dist/
+.DS_Store
+__pycache__/

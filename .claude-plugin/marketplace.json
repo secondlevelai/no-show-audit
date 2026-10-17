@@ -1,0 +1,15 @@
+{
+  "name": "secondlevelai-no-show-recovery",
+  "description": "Free tools for high-ticket sales teams, by Second Level AI",
+  "owner": {
+    "name": "Second Level AI",
+    "url": "https://github.com/secondlevelai"
+  },
+  "plugins": [
+    {
+      "name": "no-show-recovery",
+      "source": "./plugins/no-show-recovery",
+      "description": "Find every no-show in GoHighLevel, see what they're worth and why they happen, and who you can still win back. Read-only."
+    }
+  ]
+}

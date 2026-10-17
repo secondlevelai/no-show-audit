@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>No-Show Audit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0A0A0F; --surface:#101018; --surface2:#151520; --border:#20222B; --accent:#7C7BFF; --accent2:#ACA6FF;
+  --text:#ECECF1; --muted:#B2B2B8; --muted2:#8B8B96; --good:#4ADE80; --bad:#F87171; --warn:#FBBF24;
+  --track:#1C1C27; --display:"Space Grotesk",ui-sans-serif,system-ui,sans-serif; --body:Inter,ui-sans-serif,system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font:14px/1.55 var(--body);-webkit-font-smoothing:antialiased}
+a{color:var(--accent2)}
+main{padding:32px 36px 40px;max-width:1120px;margin:0 auto}
+h1{font:700 28px/1.15 var(--display);margin:0}
+h2{font:600 18px var(--display);margin:0 0 4px}
+.sub{color:var(--muted2);font-size:13px;margin-top:6px}
+.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent2)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:18px}
+.card .hint{color:var(--muted2);font-size:12.5px;margin:2px 0 14px}
+.top{margin-bottom:22px}
+.hero{border-color:#2c2b52;background:linear-gradient(180deg,#14142a,#101018);padding:24px 24px 18px}
+.hero .big{font:700 52px/1 var(--display);margin:8px 0 6px;letter-spacing:-.5px}
+.hero .line{font:600 18px/1.4 var(--display);margin:0}
+.hero .line2{color:var(--muted);margin:10px 0 0}
+.hero .line2 b{color:var(--text)}
+details{border-top:1px solid var(--border);margin-top:16px;padding-top:10px}
+details summary{cursor:pointer;color:var(--muted);font-size:13px}
+.math{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin-top:10px;font-size:13px;color:var(--muted)}
+.math b{color:var(--text);font-variant-numeric:tabular-nums;text-align:right}
+.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:18px}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px}
+.kpi .l{color:var(--muted2);font-size:12px}
+.kpi .v{font:700 26px var(--display);margin-top:4px;font-variant-numeric:tabular-nums}
+.kpi .d{font-size:12px;margin-top:2px;color:var(--muted2)}
+.funnel .row{display:grid;grid-template-columns:minmax(0,230px) minmax(0,1fr) 54px;gap:14px;align-items:center;padding:7px 0}
+.funnel .lbl{color:var(--muted)} .funnel .lbl.main{color:var(--text);font-weight:600}
+.funnel .n{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.bar{height:10px;background:var(--track);border-radius:99px;overflow:hidden;position:relative}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:4px}
+.bar.mute i{background:#4a4a5c}
+.insights{display:grid;gap:10px;margin-bottom:18px}
+.insight{border:1px solid #2c2b52;background:#13132a;border-radius:12px;padding:12px 16px;font:500 15px/1.45 var(--display)}
+.insight span{display:block;font:500 11px var(--body);text-transform:uppercase;letter-spacing:.08em;color:var(--accent2);margin-bottom:3px}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px}
+.card,.grid2>*{min-width:0}
+.brk .row{display:grid;grid-template-columns:minmax(0,170px) minmax(0,1fr) 92px;gap:12px;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);position:relative}
+.brk .row:last-child{border-bottom:0}
+.brk .name{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.brk .val{text-align:right;font-variant-numeric:tabular-nums}
+.brk .val b{font-weight:600} .brk .val small{display:block;color:var(--muted2);font-size:11.5px}
+.brk .avg{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--muted2);opacity:.7;border-radius:2px}
+.brk .worst .name{color:var(--text)} .brk .worst .bar i{background:var(--accent2)}
+.legend{display:flex;gap:16px;align-items:center;color:var(--muted2);font-size:12px;margin:-6px 0 8px}
+.legend i{display:inline-block;width:2px;height:12px;background:var(--muted2);margin-right:6px;vertical-align:-2px}
+.callout{border:1px solid #4a3a12;background:#1d170a;border-radius:12px;padding:14px 16px;margin-bottom:18px}
+.callout b{color:var(--warn)}
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+select{background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px 10px;font:inherit}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:720px}
+th{font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted2);font-weight:500;text-align:left;padding:8px 10px;border-bottom:1px solid var(--border);white-space:nowrap;cursor:pointer}
+th:hover{color:var(--text)}
+td{padding:10px;border-bottom:1px solid var(--border);vertical-align:top}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+td .said{color:var(--muted);font-size:12.5px}
+.pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;background:var(--surface2);box-shadow:inset 0 0 0 1px var(--border);color:var(--muted)}
+.next{border-color:#2c2b52;background:#13132a}
+.next p{margin:6px 0 0;color:var(--muted)} .next b{color:var(--text)}
+.next .dm{margin-top:12px;color:var(--text);font-weight:600}
+.say{display:inline-block;text-decoration:none;margin-top:10px;padding:8px 14px;border-radius:10px;background:var(--accent);color:#0A0A0F;font-weight:600}
+footer{color:var(--muted2);font-size:12px;text-align:center;padding:26px 0 10px}
+footer a{color:var(--muted)}
+.empty{color:var(--muted2);padding:14px 0}
+@media (max-width:760px){
+  main{padding:20px 16px 30px} .grid2{grid-template-columns:minmax(0,1fr)} .hero .big{font-size:40px}
+  .funnel .row{grid-template-columns:118px minmax(0,1fr) 40px} .brk .row{grid-template-columns:104px minmax(0,1fr) 70px}
+  .brk .name{white-space:normal;font-size:13px;line-height:1.3} .hero .line{font-size:16px}
+}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<footer>Free tool by <a href="https://github.com/secondlevelai" target="_blank" rel="noopener">Second Level AI</a></footer>
+<script>
+const D = /*__AUDIT_DATA__*/null;
+const $ = (s, el=document) => el.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const money = n => "$" + Math.round(n).toLocaleString("en-US");
+const pct = r => r == null ? "–" : Math.round(r * 100) + "%";
+const fmtDate = s => new Date(s).toLocaleDateString("en-US", {month: "short", day: "numeric"});
+
+function hero() {
+  const m = D.money, f = D.funnel;
+  if (!m) return `<section class="card hero"><div class="eyebrow">No-show audit</div>
+    <div class="big">${f.recoverable} people</div>
+    <p class="line">you can still win back, out of ${f.no_show_people} who no-showed in the last ${D.window.days} days.</p></section>`;
+  return `<section class="card hero">
+    <div class="eyebrow">Sitting in your no-show list</div>
+    <div class="big">${money(m.pipeline_value)}</div>
+    <p class="line">of pipeline: ${m.recoverable} people who no-showed and can still be won back, at your ${pct(m.close_rate)} close rate and ${money(m.price)} price.</p>
+    <p class="line2">Win back even <b>1 in ${Math.round(1 / m.recovery_rate)}</b> of them and that's about <b>${money(m.estimate)}</b> in new sales.</p>
+    <details><summary>How this is worked out</summary>
+      <div class="math">
+        <span>People who no-showed and can still be texted</span><b>${m.recoverable}</b>
+        <span>× your close rate (${m.close_rate_source || "given"})</span><b>${pct(m.close_rate)}</b>
+        <span>× your price (${m.price_source || "given"})</span><b>${money(m.price)}</b>
+        <span>= pipeline in your no-show list</span><b>${money(m.pipeline_value)}</b>
+        <span>× share you win back (an assumption you can change)</span><b>${pct(m.recovery_rate)}</b>
+        <span>= estimated new sales</span><b>${money(m.estimate)}</b>
+      </div>
+      <p class="sub">Close rate = people who showed in the last ${D.window.days} days and have a won deal ÷ everyone who showed. Price = the typical won deal value. Estimates, not promises: your own numbers, nothing from industry averages.</p>
+    </details></section>`;
+}
+
+function kpis() {
+  const t = D.totals, f = D.funnel;
+  const tiles = [
+    ["No-show rate", pct(t.no_show_rate), `${t.no_show_calls} of ${t.calls_with_outcome} calls`],
+    ["People who no-showed", f.no_show_people, `last ${D.window.days} days`],
+    ["Can still be won back", f.recoverable, "not rebooked, not bought, still reachable"],
+  ];
+  if (t.unmarked_past_calls) tiles.push(["Calls nobody marked", t.unmarked_past_calls, "past calls still say confirmed"]);
+  return `<div class="kpis">${tiles.map(([l, v, d]) => `<div class="kpi"><div class="l">${l}</div><div class="v">${v}</div><div class="d">${d}</div></div>`).join("")}</div>`;
+}
+
+function funnel() {
+  const f = D.funnel, max = f.no_show_people || 1;
+  const rows = [
+    ["People who no-showed", f.no_show_people, true],
+    ["Already rebooked", -f.rebooked], ["Bought anyway", -f.bought], ["Opted out of texts", -f.opted_out],
+    ["No phone number", -f.no_phone], ["Excluded by tag", -f.excluded_tag], ["Not found in contacts", -f.contact_missing],
+    ["Can still be won back", f.recoverable, true],
+  ].filter(r => r[2] || r[1]);
+  return `<section class="card funnel"><h2>Who's left to win back</h2>
+    <p class="hint">Each person counts once, even if they missed more than one call.</p>
+    ${rows.map(([l, n, main]) => `<div class="row"><div class="lbl ${main ? "main" : ""}">${l}</div>
+      <div class="bar ${main ? "" : "mute"}" title="${esc(l)}: ${Math.abs(n)}"><i style="width:${Math.abs(n) / max * 100}%"></i></div>
+      <div class="n">${n < 0 ? "−" + Math.abs(n) : n}</div></div>`).join("")}</section>`;
+}
+
+const TITLES = {gap: ["How far out the call was booked", "The longer the wait, the more people forget or cool off."],
+  setter: ["By setter", "Who set the call: the person confirming, reminding and prepping the lead before it."], source: ["By lead source", "The contact's source in HighLevel."],
+  daypart: ["By time of day", "In the account's timezone."], weekday: ["By day of week", ""]};
+
+function breakdown(key) {
+  const rows = D.breakdowns[key] || [];
+  if (!rows.length && key === "setter") return `<section class="card brk"><h2>By setter</h2>
+    <p class="hint">No setter is recorded on these calls, so there's no setter breakdown. If your team uses setters, tell Claude where you record them (contact owner, who booked the call, or a custom field) and re-run the audit.</p></section>`;
+  if (!rows.length) return "";
+  const avg = D.totals.no_show_rate, max = Math.max(...rows.map(r => r.rate || 0), avg) || 1;
+  const sized = rows.filter(r => r.calls >= 10);
+  const worst = sized.length > 1 ? sized.reduce((a, b) => (b.rate > a.rate ? b : a)) : null;
+  return `<section class="card brk"><h2>${TITLES[key][0]}</h2><p class="hint">${TITLES[key][1]}</p>
+    <div class="legend"><span><i></i>average ${pct(avg)}</span></div>
+    ${rows.map(r => `<div class="row ${r === worst && r.rate > avg ? "worst" : ""}" title="${esc(r.label)}: ${r.no_shows} no-shows out of ${r.calls} calls">
+      <div class="name">${esc(r.label)}</div>
+      <div class="bar"><i style="width:${(r.rate || 0) / max * 100}%"></i><span class="avg" style="left:${avg / max * 100}%"></span></div>
+      <div class="val"><b>${pct(r.rate)}</b><small>${r.no_shows} of ${r.calls}</small></div></div>`).join("")}</section>`;
+}
+
+function board() {
+  const b = D.board_mismatch || [];
+  if (!b.length) return "";
+  const n = b.reduce((s, x) => s + x.people, 0);
+  return `<div class="callout"><b>Your pipeline is out of date.</b> ${n} of the people who no-showed are still sitting in
+    ${b.map(x => `<b>${esc(x.stage)}</b> (${x.people})`).join(", ")} on the board. Whoever reads the board thinks those calls are still coming.</div>`;
+}
+
+let sortKey = "no_show_at", sortDir = -1;
+function people() {
+  const P = D.recoverable;
+  if (!P.length) return `<section class="card"><h2>People you can win back</h2><p class="empty">Nobody right now: every no-show already rebooked, bought, or can't be texted.</p></section>`;
+  const setters = [...new Set(P.map(p => p.setter || "No setter"))].sort(), sources = [...new Set(P.map(p => p.source))].sort();
+  return `<section class="card"><h2>People you can win back</h2>
+    <p class="hint">Most recent first. Click a column to sort.</p>
+    <div class="filters">
+      <select id="fc"><option value="">All setters</option>${setters.map(c => `<option>${esc(c)}</option>`).join("")}</select>
+      <select id="fs"><option value="">All sources</option>${sources.map(c => `<option>${esc(c)}</option>`).join("")}</select>
+    </div>
+    <div class="tablewrap"><table><thead><tr>
+      <th data-k="first_name">Name</th><th data-k="no_show_at">Missed call</th><th data-k="days_since" class="n">Days ago</th>
+      <th data-k="setter">Setter</th><th data-k="source">Source</th><th data-k="booked_gap_days" class="n">Booked ahead</th><th>What they told you</th>
+    </tr></thead><tbody id="rows"></tbody></table></div></section>`;
+}
+function said(p) {
+  const v = Object.entries(p.form_answers || {}).filter(([k]) => !/source|hear about/i.test(k));
+  return v.length ? `<span class="said">"${esc(v.sort((a, b) => String(b[1]).length - String(a[1]).length)[0][1])}"</span>` : "";
+}
+function renderRows() {
+  const fc = $("#fc")?.value, fs = $("#fs")?.value;
+  const rows = D.recoverable.filter(p => (!fc || (p.setter || "No setter") === fc) && (!fs || p.source === fs))
+    .sort((a, b) => (a[sortKey] > b[sortKey] ? 1 : a[sortKey] < b[sortKey] ? -1 : 0) * sortDir);
+  $("#rows").innerHTML = rows.map(p => `<tr>
+    <td>${esc(p.first_name)} ${esc(p.last_name)}</td><td>${fmtDate(p.no_show_at)}</td><td class="n">${p.days_since}</td>
+    <td>${esc(p.setter || "–")}</td><td><span class="pill">${esc(p.source)}</span></td>
+    <td class="n">${p.booked_gap_days == null ? "–" : Math.round(p.booked_gap_days) + "d"}</td><td>${said(p)}</td></tr>`).join("");
+}
+
+function cta() {
+  const c = D.cta;
+  if (!c) return "";
+  return `<section class="card next"><h2>${esc(c.headline)}</h2>
+    <p>${D.funnel.recoverable ? `<b>${D.funnel.recoverable} people</b> on this list can still be won back. ` : ""}${esc(c.body)}</p>
+    ${c.url && c.button ? `<a class="say" href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.button)}</a>` : ""}
+    ${c.url_label ? `<p class="dm">${esc(c.url_label)}</p>` : ""}</section>`;
+}
+
+function render() {
+  const ins = D.insights || [];
+  $("#app").innerHTML = `
+    <div class="top"><div class="eyebrow">No-Show Recovery</div>
+      <h1>No-show audit${D.client ? ": " + esc(D.client) : ""}</h1>
+      <div class="sub">${fmtDate(D.window.from)} – ${fmtDate(D.window.to)} · ${esc(D.calendars.join(", "))} · read-only, nothing was sent or changed</div></div>
+    ${hero()}${kpis()}
+    ${ins.length ? `<h2 style="margin:6px 0 10px">Where your no-shows come from</h2><div class="insights">${ins.map(i => `<div class="insight"><span>${esc(TITLES[i.dimension][0])}</span>${esc(i.text)}</div>`).join("")}</div>` : ""}
+    <div class="grid2">${breakdown("gap")}${breakdown("setter")}</div>
+    <div class="grid2">${breakdown("source")}${breakdown("daypart")}</div>
+    ${board()}${funnel()}${cta()}${people()}`;
+  if ($("#rows")) {
+    renderRows();
+    $("#fc").onchange = $("#fs").onchange = renderRows;
+    document.querySelectorAll("th[data-k]").forEach(th => th.onclick = () => {
+      const k = th.dataset.k; sortDir = sortKey === k ? -sortDir : (k === "no_show_at" ? -1 : 1); sortKey = k; renderRows();
+    });
+  }
+}
+render();
+</script>
+</body>
+</html>
