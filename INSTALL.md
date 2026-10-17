@@ -4,7 +4,7 @@
 
 <!-- MODULE METADATA
 module: no-show-recovery
-version: v0.6.0
+version: v0.6.1
 status: RELEASED
 requires: [claude-paid-plan, gohighlevel]
 category: Sales

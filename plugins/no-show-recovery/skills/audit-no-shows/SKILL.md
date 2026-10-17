@@ -18,6 +18,7 @@ Before the first HighLevel call, read `references/ghl.md`. It has the exact oper
 - **Appointments or contacts that come back inline** (small accounts): save them with the Write tool, exactly as returned, to `RUN/raw/<name>.json`, then pass that path. Don't edit, summarize or filter them.
 - **The three small lookups** (step 2.4) usually come back inline. Save only what the script needs, in this exact shape (see step 2.4).
 - **Save files only with the Write tool**, never with shell tricks (`cat > file <<EOF`, `echo … >`). Claude Code's safety check blocks those and the user gets an extra prompt.
+- **Never `cd` anywhere.** Run scripts by their full path (`python3 ${CLAUDE_SKILL_DIR}/scripts/audit.py …`) from wherever the chat is. Claude Code blocks `cd` into the plugin's folder.
 - **Write every path out in full in shell commands.** Don't use shell variables (`$T`, `$RUN`): Claude Code's safety check blocks commands it can't read.
 - If a HighLevel call errors, retry once. If it fails again, tell the user in one plain sentence what didn't work and stop.
 
