@@ -11,7 +11,11 @@ Say **"audit my no-shows"** and get an interactive report of the last 90 days:
 
 It only reads your data. Nothing is sent, changed or stored on any server of ours. (HighLevel's sign-in page lists every permission it has, because Claude asks for all of them when it connects. The plugin itself only calls read operations.) It runs on your own Claude plan, with no API keys: you sign in to GoHighLevel once.
 
-## Install (Claude Code: desktop app Code tab, VS Code, Cursor, terminal)
+## Install
+
+**Easiest:** open Claude Code (the Claude desktop app's **Code** tab, VS Code, Cursor or a terminal), paste this repo's link, and say **"set this up"**. Claude follows [INSTALL.md](INSTALL.md): it installs the plugin, opens the GoHighLevel sign-in in your browser, and gets you to your first audit. You never type a command.
+
+**Or by hand:**
 
 ```bash
 claude plugin marketplace add secondlevelai/no-show-recovery
