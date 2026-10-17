@@ -3,7 +3,7 @@ dev/
 .env
 *.env
 # What the plugin writes in a user's folder
-no-show-recovery.json
+no-show-audit.json
 nsr-runs/
 dist/
 .DS_Store

@@ -1,4 +1,4 @@
-# No-Show Recovery
+# No-Show Audit
 
 A free Claude plugin from Second Level AI for growth operators and offer owners on **GoHighLevel**.
 
@@ -18,11 +18,11 @@ It only reads your data. Nothing is sent, changed or stored on any server of our
 **Or by hand:**
 
 ```bash
-claude plugin marketplace add secondlevelai/no-show-recovery
-claude plugin install no-show-recovery@secondlevelai-no-show-recovery
+claude plugin marketplace add secondlevelai/no-show-audit
+claude plugin install no-show-audit@secondlevelai-no-show-audit
 ```
 
-Then open Claude Code in any folder and say **"set up No-Show Recovery"**. It walks you through connecting GoHighLevel (about a minute) and runs your first audit.
+Then open Claude Code in any folder and say **"set up No-Show Audit"**. It walks you through connecting GoHighLevel (about a minute) and runs your first audit.
 
 **Needs:** a paid Claude plan and a GoHighLevel account with your sales calls on a calendar.
 

@@ -1,13 +1,13 @@
 ---
 name: setup
-description: Guided first-time setup for No-Show Recovery, such as "set up No-Show Recovery", "connect GoHighLevel", "connect GHL", "add a client", "how do I get started", right after the plugin is installed, or when the user pastes the github.com/secondlevelai/no-show-recovery link. Connects GoHighLevel with one sign-in, picks the client sub-account and its sales-call calendars, and runs the first no-show audit.
+description: Guided first-time setup for No-Show Audit, such as "set up No-Show Audit", "connect GoHighLevel", "connect GHL", "add a client", "how do I get started", right after the plugin is installed, or when the user pastes the github.com/secondlevelai/no-show-audit link. Connects GoHighLevel with one sign-in, picks the client sub-account and its sales-call calendars, and runs the first no-show audit.
 ---
 
-# No-Show Recovery: guided setup
+# No-Show Audit: guided setup
 
 ## FOR CLAUDE
 
-You are walking a growth operator, agency owner or offer owner through setting up No-Show Recovery. Follow these rules:
+You are walking a growth operator, agency owner or offer owner through setting up No-Show Audit. Follow these rules:
 
 **Behavior:**
 - Assume they've never connected an app to Claude. Explain each step in one or two plain sentences **before** asking them to do it.
@@ -34,7 +34,7 @@ Don't describe the plugin. Go to Step 0. Run `python3 ${CLAUDE_SKILL_DIR}/../aud
 
 If they just installed the plugin, or this is their first message to it, say:
 
-> "No-Show Recovery is installed. ✅
+> "No-Show Audit is installed. ✅
 >
 > **Next: connect GoHighLevel.** That's where your calendar and contacts live. It takes about a minute: you sign in to HighLevel once and pick which sub-accounts I can see. No API keys."
 
@@ -51,9 +51,9 @@ If the HighLevel tools already work (`list_locations` responds), say "Looks like
 1. Say one line: "Opening the GoHighLevel sign-in in your browser now…"
 
 2. Start the sign-in in the background with your shell tool. It opens their default browser by itself. Pick the command for their system (check with `uname` if unsure):
-   - **macOS:** `(script -q /tmp/nsr-login.log claude mcp login plugin:no-show-recovery:highlevel </dev/null >/dev/null 2>&1 &)`
-   - **Linux:** `(script -qc "claude mcp login plugin:no-show-recovery:highlevel" /tmp/nsr-login.log </dev/null >/dev/null 2>&1 &)`
-   - **Windows:** `cmd.exe /c start "" /min cmd /c "claude mcp login plugin:no-show-recovery:highlevel"`
+   - **macOS:** `(script -q /tmp/nsr-login.log claude mcp login plugin:no-show-audit:highlevel </dev/null >/dev/null 2>&1 &)`
+   - **Linux:** `(script -qc "claude mcp login plugin:no-show-audit:highlevel" /tmp/nsr-login.log </dev/null >/dev/null 2>&1 &)`
+   - **Windows:** `cmd.exe /c start "" /min cmd /c "claude mcp login plugin:no-show-audit:highlevel"`
 
    Never run `claude mcp login` in the foreground: it needs a terminal and fails with "stdin isn't a terminal". The wrappers above give it one.
 
@@ -74,7 +74,7 @@ If the HighLevel tools already work (`list_locations` responds), say "Looks like
 4. When they say done, check:
 
 ```bash
-claude mcp list 2>&1 | grep "no-show-recovery:highlevel"
+claude mcp list 2>&1 | grep "no-show-audit:highlevel"
 ```
 
 - **Connected** → go to **[VERIFY]**.
@@ -83,14 +83,14 @@ claude mcp list 2>&1 | grep "no-show-recovery:highlevel"
 ### Path B: Claude app or claude.ai chat
 
 1. Click **Customize** in the left sidebar.
-2. Click **Plugins**, then **No-Show Recovery**, then the **Connectors** tab.
+2. Click **Plugins**, then **No-Show Audit**, then the **Connectors** tab.
 3. Next to **HighLevel**, click **Connect** (if it says **Add**, click that first).
 4. Sign in to GoHighLevel, tick the sub-accounts you want me to see, and click **Allow**. It should say **Connected**.
-5. **Start a new chat** (so the connection loads) and type **"set up No-Show Recovery"**. I'll pick up from the check.
+5. **Start a new chat** (so the connection loads) and type **"set up No-Show Audit"**. I'll pick up from the check.
 
 **Not on the Connectors tab?** On Claude **Team or Enterprise** plans, an Owner must allow the connector first: they go to **Customize → Connectors**, add HighLevel, and allow it. Then try again.
 
-> Tip for Path B: the audit report and texting need Claude to run code. In the Claude **desktop app**, open the **Code** tab and run No-Show Recovery there.
+> Tip for Path B: the audit report and texting need Claude to run code. In the Claude **desktop app**, open the **Code** tab and run No-Show Audit there.
 
 ### [VERIFY]
 
@@ -98,9 +98,9 @@ Call `list_locations`.
 
 - Sub-accounts come back → "**GoHighLevel's connected.** That was the hard part." → Step 2.
 - **HighLevel tools aren't available in this chat yet** (the connection is made, but this chat started before it): say exactly this, and nothing more technical:
-  > "**GoHighLevel's connected.** ✅ One last thing: this chat started before the connection, so it can't see it. **Start a new chat and type 'set up No-Show Recovery'.** I'll pick up right where we left off."
+  > "**GoHighLevel's connected.** ✅ One last thing: this chat started before the connection, so it can't see it. **Start a new chat and type 'set up No-Show Audit'.** I'll pick up right where we left off."
   Don't suggest `/reload-plugins`: it reloads skills but not the HighLevel connection. The new chat finds the tools working and continues from Step 2.
-- Auth error → "The sign-in didn't stick. Let's do it once more." Run `claude mcp logout plugin:no-show-recovery:highlevel`, then repeat Step 1 Path A from step 2.
+- Auth error → "The sign-in didn't stick. Let's do it once more." Run `claude mcp logout plugin:no-show-audit:highlevel`, then repeat Step 1 Path A from step 2.
 - Zero sub-accounts → "I'm connected but can't see any sub-accounts. When you signed in, did you tick the client accounts? Let's sign in once more and tick them." Repeat Step 1.
 
 ---
@@ -185,6 +185,6 @@ If not now → "Any time, just say **'audit my no-shows'**."
 
 "Add a client", "set up another sub-account" or "audit {name}'s no-shows" for a client not in the config → run Steps 2–4 for that client only.
 
-If the sub-account they name isn't in `list_locations`, they didn't tick it when they signed in. Path A: say "You didn't tick that one when you signed in. Let's sign in again and tick it," run `claude mcp logout plugin:no-show-recovery:highlevel`, then redo Step 1 Path A (you open the sign-in again). Path B: **Customize → Plugins → No-Show Recovery → Connectors** → disconnect and connect again.
+If the sub-account they name isn't in `list_locations`, they didn't tick it when they signed in. Path A: say "You didn't tick that one when you signed in. Let's sign in again and tick it," run `claude mcp logout plugin:no-show-audit:highlevel`, then redo Step 1 Path A (you open the sign-in again). Path B: **Customize → Plugins → No-Show Audit → Connectors** → disconnect and connect again.
 
 <sub>Free tool by Second Level AI</sub>

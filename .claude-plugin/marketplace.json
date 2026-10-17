@@ -1,5 +1,5 @@
 {
-  "name": "secondlevelai-no-show-recovery",
+  "name": "secondlevelai-no-show-audit",
   "description": "Free tools for high-ticket sales teams, by Second Level AI",
   "owner": {
     "name": "Second Level AI",
@@ -7,8 +7,8 @@
   },
   "plugins": [
     {
-      "name": "no-show-recovery",
-      "source": "./plugins/no-show-recovery",
+      "name": "no-show-audit",
+      "source": "./plugins/no-show-audit",
       "description": "Find every no-show in GoHighLevel, see what they're worth and why they happen, and who you can still win back. Read-only."
     }
   ]

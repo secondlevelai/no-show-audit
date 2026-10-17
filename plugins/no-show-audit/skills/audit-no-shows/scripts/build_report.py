@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the No-Show Recovery report: one self-contained HTML file.
+"""Build the No-Show Audit report: one self-contained HTML file.
 
 Every number comes from audit.json (written by audit.py). Standard library only.
 

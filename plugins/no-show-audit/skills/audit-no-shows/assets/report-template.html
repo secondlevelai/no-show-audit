@@ -213,7 +213,7 @@ function cta() {
 function render() {
   const ins = D.insights || [];
   $("#app").innerHTML = `
-    <div class="top"><div class="eyebrow">No-Show Recovery</div>
+    <div class="top"><div class="eyebrow">No-Show Audit</div>
       <h1>No-show audit${D.client ? ": " + esc(D.client) : ""}</h1>
       <div class="sub">${fmtDate(D.window.from)} – ${fmtDate(D.window.to)} · ${esc(D.calendars.join(", "))} · read-only, nothing was sent or changed</div></div>
     ${hero()}${kpis()}

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""No-Show Recovery audit: every number in the report comes from here.
+"""No-Show Audit audit: every number in the report comes from here.
 
 Claude pulls raw HighLevel responses into files and passes the paths. This script
 never trusts Claude with arithmetic: it dedupes, applies the eligibility rules,
@@ -35,9 +35,9 @@ try:
 except ImportError:  # pragma: no cover
     ZoneInfo = None
 
-HOME_DIR = Path.home() / ".no-show-recovery"
+HOME_DIR = Path.home() / ".no-show-audit"
 DEFAULT_CONFIG = HOME_DIR / "config.json"
-REPORTS_DIR = Path.home() / "Documents" / "no-show-recovery"
+REPORTS_DIR = Path.home() / "Documents" / "no-show-audit"
 HELD = {"showed", "completed"}
 NOSHOW = {"noshow"}
 UPCOMING_OK = {"confirmed", "new", "active", "showed", "completed"}  # counts as "rebooked"

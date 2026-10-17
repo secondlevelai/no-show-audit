@@ -30,7 +30,7 @@ Before the first HighLevel call, read `references/ghl.md`. It has the exact oper
    - Otherwise, one client → use it. Several → ask with AskUserQuestion, header "Client", default first.
 3. Check the HighLevel tools respond (`list_locations`). If they don't, follow the setup skill's Step 1 to reconnect.
    Otherwise read that config file.
-4. Make today's report folder: `python3 ${CLAUDE_SKILL_DIR}/scripts/audit.py newrun --client <locationId>`. It prints the folder path (in `~/Documents/no-show-recovery/`). Keep it as `RUN`, written out in full.
+4. Make today's report folder: `python3 ${CLAUDE_SKILL_DIR}/scripts/audit.py newrun --client <locationId>`. It prints the folder path (in `~/Documents/no-show-audit/`). Keep it as `RUN`, written out in full.
 
 Say one line: "Auditing **{client}**: last 90 days of {calendar names}. Read-only, nothing gets sent."
 

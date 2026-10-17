@@ -4,7 +4,7 @@ Every skill in this plugin reads this file before calling HighLevel. It was writ
 
 ## The connector
 
-The plugin's MCP server is `highlevel` (in Claude Code it shows as `plugin:no-show-recovery:highlevel`). It exposes four tools, and together they reach HighLevel's whole public API:
+The plugin's MCP server is `highlevel` (in Claude Code it shows as `plugin:no-show-audit:highlevel`). It exposes four tools, and together they reach HighLevel's whole public API:
 
 | Tool | Use |
 |---|---|

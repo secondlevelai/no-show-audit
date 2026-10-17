@@ -1,10 +1,10 @@
-# No-Show Recovery: Guided Installer
+# No-Show Audit: Guided Installer
 
 > A free Claude plugin from Second Level AI. Finds every no-show in GoHighLevel, shows what they're worth at your own price and close rate, where they come from (setter, lead source, booking gap, time of day), and who you can still win back. Read-only.
 
 <!-- MODULE METADATA
-module: no-show-recovery
-version: v0.6.1
+module: no-show-audit
+version: v0.7.0
 status: RELEASED
 requires: [claude-paid-plan, gohighlevel]
 category: Sales
@@ -17,7 +17,7 @@ setup_time: 3-5 minutes
 
 ## FOR CLAUDE
 
-You are helping someone install and set up No-Show Recovery. They pasted this repo's link (or this file) and asked you to set it up. Follow these rules:
+You are helping someone install and set up No-Show Audit. They pasted this repo's link (or this file) and asked you to set it up. Follow these rules:
 
 **Behavior:**
 - Assume they have never installed a Claude plugin or connected an app before.
@@ -38,7 +38,7 @@ You are helping someone install and set up No-Show Recovery. They pasted this re
 
 Read this to the user before starting:
 
-We're setting up **No-Show Recovery**. When we're done, you'll say "audit my no-shows" and get an interactive report in your browser with:
+We're setting up **No-Show Audit**. When we're done, you'll say "audit my no-shows" and get an interactive report in your browser with:
 
 - **What your no-show list is worth:** the people who no-showed and can still be won back, at your own close rate and price (worked out from your won deals).
 - **Where no-shows come from:** by setter, lead source, how far out the call was booked, and time of day, each against your average.
@@ -65,27 +65,27 @@ Don't stop to ask about these. Mention them only if something fails.
 
 ### Step 1: Install
 
-Say "Installing No-Show Recovery…" and run this yourself:
+Say "Installing No-Show Audit…" and run this yourself:
 
 ```bash
-if claude plugin list 2>/dev/null | grep -q "no-show-recovery"; then
-  claude plugin marketplace update secondlevelai-no-show-recovery && claude plugin update no-show-recovery@secondlevelai-no-show-recovery
+if claude plugin list 2>/dev/null | grep -q "no-show-audit"; then
+  claude plugin marketplace update secondlevelai-no-show-audit && claude plugin update no-show-audit@secondlevelai-no-show-audit
 else
-  claude plugin marketplace add secondlevelai/no-show-recovery && claude plugin install no-show-recovery@secondlevelai-no-show-recovery
+  claude plugin marketplace add secondlevelai/no-show-audit && claude plugin install no-show-audit@secondlevelai-no-show-audit
 fi
 ```
 
-[VERIFY] `claude plugin list` shows `no-show-recovery@secondlevelai-no-show-recovery` enabled → "**No-Show Recovery is installed ✅**"
+[VERIFY] `claude plugin list` shows `no-show-audit@secondlevelai-no-show-audit` enabled → "**No-Show Audit is installed ✅**"
 
 ### Step 2: Connect GoHighLevel (you open the sign-in)
 
-If `claude mcp list 2>&1 | grep "no-show-recovery:highlevel"` already says **Connected**, skip to Step 3.
+If `claude mcp list 2>&1 | grep "no-show-audit:highlevel"` already says **Connected**, skip to Step 3.
 
 Otherwise say one line, "Opening the GoHighLevel sign-in in your browser now…", and start the sign-in in the background. Pick the command for their system (`uname` if unsure):
 
-- **macOS:** `(script -q /tmp/nsr-login.log claude mcp login plugin:no-show-recovery:highlevel </dev/null >/dev/null 2>&1 &)`
-- **Linux:** `(script -qc "claude mcp login plugin:no-show-recovery:highlevel" /tmp/nsr-login.log </dev/null >/dev/null 2>&1 &)`
-- **Windows:** `cmd.exe /c start "" /min cmd /c "claude mcp login plugin:no-show-recovery:highlevel"`
+- **macOS:** `(script -q /tmp/nsr-login.log claude mcp login plugin:no-show-audit:highlevel </dev/null >/dev/null 2>&1 &)`
+- **Linux:** `(script -qc "claude mcp login plugin:no-show-audit:highlevel" /tmp/nsr-login.log </dev/null >/dev/null 2>&1 &)`
+- **Windows:** `cmd.exe /c start "" /min cmd /c "claude mcp login plugin:no-show-audit:highlevel"`
 
 Never run `claude mcp login` in the foreground: it needs a terminal and fails with "stdin isn't a terminal". The wrappers above give it one.
 
@@ -106,7 +106,7 @@ Then say exactly this:
 [VERIFY] When they say done:
 
 ```bash
-claude mcp list 2>&1 | grep "no-show-recovery:highlevel"
+claude mcp list 2>&1 | grep "no-show-audit:highlevel"
 ```
 
 - **Connected** → "**GoHighLevel's connected.** That was the hard part." → Step 3.
@@ -118,7 +118,7 @@ This chat started before the plugin was installed, so it can't use the plugin's 
 
 > "**You're all set ✅**
 >
-> **Last step:** start a **new chat** and type **"set up No-Show Recovery"**. Any folder works, because your settings are saved in your home folder and reports go to **Documents → no-show-recovery**.
+> **Last step:** start a **new chat** and type **"set up No-Show Audit"**. Any folder works, because your settings are saved in your home folder and reports go to **Documents → no-show-audit**.
 >
 > I'll ask which client and which calendar your sales calls are on, then run your first audit: a report in your browser showing what your no-shows are worth, where they come from, and who you can still win back."
 
@@ -130,15 +130,15 @@ The **setup** skill takes over in the new chat. It finds GoHighLevel already con
 
 You can't install from a chat message. Give the clicks:
 
-1. **Customize** → **Plugins** → **Add** → **Add marketplace** → paste **`secondlevelai/no-show-recovery`** → install **No-Show Recovery**.
+1. **Customize** → **Plugins** → **Add** → **Add marketplace** → paste **`secondlevelai/no-show-audit`** → install **No-Show Audit**.
 2. Open its **Connectors** tab → **Connect** on **HighLevel** → sign in, tick your sub-accounts → **Allow**. On Claude Team or Enterprise, an Owner may need to allow the connector first under **Customize → Connectors**.
-3. Open the Claude **desktop app's Code tab** (the report needs Claude to run code), start a new chat and say **"set up No-Show Recovery."**
+3. Open the Claude **desktop app's Code tab** (the report needs Claude to run code), start a new chat and say **"set up No-Show Audit."**
 
 ---
 
 ## AFTER SETUP
 
-- **Any time:** "Audit my no-shows." A fresh 90-day report each time, saved in **Documents → no-show-recovery**.
+- **Any time:** "Audit my no-shows." A fresh 90-day report each time, saved in **Documents → no-show-audit**.
 - **Another client:** "Audit {client}'s no-shows" or "add a client". It asks which calendar, then runs.
 - **Change the numbers:** "Use $5k as the price", "our close rate is 25%", "show me Jake's no-shows".
 

@@ -1,11 +1,11 @@
 {
-  "name": "no-show-recovery",
-  "displayName": "No-Show Recovery",
-  "version": "0.6.1",
+  "name": "no-show-audit",
+  "displayName": "No-Show Audit",
+  "version": "0.7.0",
   "description": "Find every no-show in GoHighLevel, see what they're worth and why they happen (setter, lead source, booking gap, time of day). Read-only.",
   "author": { "name": "Second Level AI", "url": "https://github.com/secondlevelai" },
-  "homepage": "https://github.com/secondlevelai/no-show-recovery",
-  "repository": "https://github.com/secondlevelai/no-show-recovery",
+  "homepage": "https://github.com/secondlevelai/no-show-audit",
+  "repository": "https://github.com/secondlevelai/no-show-audit",
   "license": "MIT",
   "keywords": ["no-shows", "gohighlevel", "ghl", "sales calls", "show rate", "high-ticket", "sms"]
 }
