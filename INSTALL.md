@@ -4,7 +4,7 @@
 
 <!-- MODULE METADATA
 module: no-show-recovery
-version: v0.5.1
+version: v0.5.2
 status: RELEASED
 requires: [claude-paid-plan, gohighlevel]
 category: Sales
@@ -112,17 +112,19 @@ claude mcp list 2>&1 | grep "no-show-recovery:highlevel"
 - **Connected** → "**GoHighLevel's connected.** That was the hard part." → Step 3.
 - **Needs authentication** → the page probably expired. "That sign-in timed out. Opening a fresh one…" Run the sign-in command again and repeat the message. Never ask them to run anything.
 
-### Step 3: One next step
+### Step 3: Load the plugin and run setup
 
-This chat started before the plugin was installed, so it can't use the plugin's tools yet. End with exactly this, and nothing after it:
+This chat started before the plugin was installed, so it has to reload plugins once to see it. End with exactly this, and nothing after it:
 
 > "**You're all set ✅**
 >
-> **Last step:** open a **new chat in this same folder** and type **"set up No-Show Recovery"**.
+> **Last step:** type **/reload-plugins** and press **Enter**, then type **"set up No-Show Recovery"**.
 >
 > I'll ask which client and which calendar your sales calls are on, then run your first audit: a report in your browser showing what your no-shows are worth, where they come from, and who you can still win back."
 
-The **setup** skill takes over in the new chat. It finds GoHighLevel already connected and goes straight to picking the client and calendars.
+The **setup** skill takes over. It finds GoHighLevel already connected and goes straight to picking the client and calendars.
+
+**Only if they say `/reload-plugins` didn't work:** "No problem. Open a new chat in this same folder and type **set up No-Show Recovery**."
 
 ---
 

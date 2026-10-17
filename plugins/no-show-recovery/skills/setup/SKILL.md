@@ -98,8 +98,8 @@ Call `list_locations`.
 
 - Sub-accounts come back → "**GoHighLevel's connected.** That was the hard part." → Step 2.
 - **HighLevel tools aren't available in this chat yet** (the connection is made, but this chat started before it): say exactly this, and nothing more technical:
-  > "**GoHighLevel's connected.** ✅ One last thing: this chat started before the connection, so it can't see it yet. **Open a new chat in this same folder and type 'set up No-Show Recovery'.** I'll pick up right where we left off."
-  The new chat will find the tools working and continue from Step 2.
+  > "**GoHighLevel's connected.** ✅ One last thing: type **/reload-plugins** and press **Enter**, then type **set up No-Show Recovery** and I'll pick up right where we left off."
+  After the reload the tools work, and setup continues from Step 2. Only if they say `/reload-plugins` didn't work: "No problem. Open a new chat in this same folder and type **set up No-Show Recovery**."
 - Auth error → "The sign-in didn't stick. Let's do it once more." Run `claude mcp logout plugin:no-show-recovery:highlevel`, then repeat Step 1 Path A from step 2.
 - Zero sub-accounts → "I'm connected but can't see any sub-accounts. When you signed in, did you tick the client accounts? Let's sign in once more and tick them." Repeat Step 1.
 
