@@ -12,7 +12,8 @@ You are walking a growth operator, agency owner or offer owner through setting u
 **Behavior:**
 - Assume they've never connected an app to Claude. Explain each step in one or two plain sentences **before** asking them to do it.
 - **One step at a time.** Give the step, then wait for them to say it's done before moving on.
-- Use exact names in **bold**: **Customize**, **Plugins**, **Connectors**, **Connect**, `/mcp`, **Authenticate**.
+- Use exact names in **bold**: **Customize**, **Plugins**, **Connectors**, **Connect**, **Allow**.
+- **Never ask them to run a command, open a terminal or use `/mcp`.** You run anything that needs running.
 - Celebrate small wins in one line ("GoHighLevel's connected. That was the hard part.").
 - If something fails, explain it in plain English and give the one thing to try next. No raw errors.
 - **Never skip a [VERIFY].**
@@ -45,33 +46,37 @@ If the HighLevel tools already work (`list_locations` responds), say "Looks like
 
 ### Path A: Claude Code (desktop app Code tab, VS Code, Cursor, terminal)
 
-1. Tell them exactly this:
+**You start the sign-in. The user never types a command, never uses `/mcp`, and never opens a terminal.** (`/mcp` doesn't work in the Claude desktop app, so don't send anyone there.)
 
-> "Let's connect GoHighLevel. In the Claude message box:
+1. Say one line: "Opening the GoHighLevel sign-in in your browser now…"
+
+2. Start the sign-in in the background with your shell tool. It opens their default browser by itself. Pick the command for their system (check with `uname` if unsure):
+   - **macOS:** `(script -q /tmp/nsr-login.log claude mcp login plugin:no-show-recovery:highlevel </dev/null >/dev/null 2>&1 &)`
+   - **Linux:** `(script -qc "claude mcp login plugin:no-show-recovery:highlevel" /tmp/nsr-login.log </dev/null >/dev/null 2>&1 &)`
+   - **Windows:** `cmd.exe /c start "" /min cmd /c "claude mcp login plugin:no-show-recovery:highlevel"`
+
+   Never run `claude mcp login` in the foreground: it needs a terminal and fails with "stdin isn't a terminal". The wrappers above give it one.
+
+3. Then tell them exactly this:
+
+> "A **GoHighLevel** tab just opened in your browser. In it:
 >
-> 1. Type **/mcp** and press **Enter**.
-> 2. Choose **no-show-recovery:highlevel**. Click it, or use the arrow keys and press **Enter**.
-> 3. Choose **Authenticate** and press **Enter**. A browser tab opens: sign in to GoHighLevel, **tick every sub-account (client) you want me to look at**, and click **Allow**.
+> 1. Sign in.
+> 2. **Tick every sub-account (client)** you want me to look at.
+> 3. Click **Allow**.
 >
-> Then come back here, type **done** and press **Enter**."
+> Then come back here and type **done**. (Do it now, because the sign-in page expires after a few minutes.)"
 
-(If the plugin was installed earlier in this same conversation, add a first step: "Type **/reload-plugins** and press **Enter**.")
+**No tab opened?** On macOS/Linux, read `/tmp/nsr-login.log`, find the `https://services.leadconnectorhq.com/mcp/anthropic/authorize?…` link, and give it to them as a clickable link: "Open this link to sign in." On Windows, a small command window may have opened instead, and the link is in it.
 
-2. When they say done, confirm:
+4. When they say done, check:
 
 ```bash
 claude mcp list 2>&1 | grep "no-show-recovery:highlevel"
 ```
 
-It should say **Connected**.
-
-**Never run `claude mcp login` yourself through your shell tool.** It needs a real terminal and fails with "stdin isn't a terminal" in the desktop app and editors.
-
-**Fallback, only if `/mcp` doesn't show the connector or Authenticate fails:** open a real terminal window running the sign-in. Ask first: "Want me to open a terminal window for the sign-in?"
-- **macOS:** `osascript -e 'tell application "Terminal" to activate' -e 'tell application "Terminal" to do script "claude mcp login plugin:no-show-recovery:highlevel"'`
-- **Windows:** `start cmd /k claude mcp login plugin:no-show-recovery:highlevel`
-- **Linux:** ask them to open a terminal and paste `claude mcp login plugin:no-show-recovery:highlevel`.
-Then have them type `/mcp` → **Reconnect** on that connector so this conversation picks it up.
+- **Connected** → go to **[VERIFY]**.
+- **Needs authentication** → the page probably expired. Say "That sign-in timed out. Opening a fresh one…", run step 2 again, and repeat step 3. Never ask them to run anything.
 
 ### Path B: Claude app or claude.ai chat
 
@@ -90,8 +95,10 @@ Then have them type `/mcp` → **Reconnect** on that connector so this conversat
 Call `list_locations`.
 
 - Sub-accounts come back → "**GoHighLevel's connected.** That was the hard part." → Step 2.
-- Tools not available yet → Path A: have them type `/mcp` and pick **Reconnect** on `plugin:no-show-recovery:highlevel` (or `/reload-plugins`). Path B: start a new chat.
-- Auth error → "The sign-in didn't stick. Let's do it once more." Repeat Step 1 (Path A: `/mcp` → the connector → **Clear authentication** if offered, then **Authenticate** again; or use the terminal-window fallback).
+- **HighLevel tools aren't available in this chat yet** (the connection is made, but this chat started before it): say exactly this, and nothing more technical:
+  > "**GoHighLevel's connected.** ✅ One last thing: this chat started before the connection, so it can't see it yet. **Open a new chat in this same folder and type 'set up No-Show Recovery'.** I'll pick up right where we left off."
+  The new chat will find the tools working and continue from Step 2.
+- Auth error → "The sign-in didn't stick. Let's do it once more." Run `claude mcp logout plugin:no-show-recovery:highlevel`, then repeat Step 1 Path A from step 2.
 - Zero sub-accounts → "I'm connected but can't see any sub-accounts. When you signed in, did you tick the client accounts? Let's sign in once more and tick them." Repeat Step 1.
 
 ---
@@ -176,6 +183,6 @@ If not now → "Any time, just say **'audit my no-shows'**."
 
 "Add a client", "set up another sub-account" or "audit {name}'s no-shows" for a client not in the config → run Steps 2–4 for that client only.
 
-If the sub-account they name isn't in `list_locations`, they didn't tick it when they signed in. Path A: `/mcp` → **no-show-recovery:highlevel** → **Clear authentication**, then **Authenticate** again and tick it this time. Path B: **Customize → Plugins → No-Show Recovery → Connectors** → disconnect and connect again.
+If the sub-account they name isn't in `list_locations`, they didn't tick it when they signed in. Path A: say "You didn't tick that one when you signed in. Let's sign in again and tick it," run `claude mcp logout plugin:no-show-recovery:highlevel`, then redo Step 1 Path A (you open the sign-in again). Path B: **Customize → Plugins → No-Show Recovery → Connectors** → disconnect and connect again.
 
 <sub>Free tool by Second Level AI</sub>
