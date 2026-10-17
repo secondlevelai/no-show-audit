@@ -65,6 +65,8 @@ If the HighLevel tools already work (`list_locations` responds), say "Looks like
 > 2. **Tick every sub-account (client)** you want me to look at.
 > 3. Click **Allow**.
 >
+> **About the long permissions list:** HighLevel shows every permission it has, because that's how Claude connects to HighLevel for any tool. This plugin only **reads** your calendar, contacts and deals. It never sends, edits or deletes anything, and you can disconnect it any time.
+>
 > Then come back here and type **done**. (Do it now, because the sign-in page expires after a few minutes.)"
 
 **No tab opened?** On macOS/Linux, read `/tmp/nsr-login.log`, find the `https://services.leadconnectorhq.com/mcp/anthropic/authorize?…` link, and give it to them as a clickable link: "Open this link to sign in." On Windows, a small command window may have opened instead, and the link is in it.

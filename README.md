@@ -9,7 +9,7 @@ Say **"audit my no-shows"** and get an interactive report of the last 90 days:
 - **Who's left:** people who already rebooked, bought, opted out of texts or have no phone are taken out, so the list is real.
 - **Pipeline check:** no-shows still sitting in the wrong stage on your board.
 
-It only reads your data. Nothing is sent, changed or stored on any server of ours. It runs on your own Claude plan, with no API keys: you sign in to GoHighLevel once.
+It only reads your data. Nothing is sent, changed or stored on any server of ours. (HighLevel's sign-in page lists every permission it has, because Claude asks for all of them when it connects. The plugin itself only calls read operations.) It runs on your own Claude plan, with no API keys: you sign in to GoHighLevel once.
 
 ## Install (Claude Code: desktop app Code tab, VS Code, Cursor, terminal)
 
